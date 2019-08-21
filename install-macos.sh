@@ -65,8 +65,8 @@ background and submit data to Vanta.
 You can check the agent status using the \"vanta-cli status\" command.
 
 If you ever want to stop the agent, please use the toolbar icon or
-the launchctl command. It will restart automatically at login.
+the vanta-cli command. It will restart automatically at login.
 
 To register this device to a new user, run \"vanta-cli register\" or click on \"Register Vanta Agent\"
-on the toolber.
+on the toolbar.
 \033[0m"
