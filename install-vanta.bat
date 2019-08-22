@@ -4,12 +4,12 @@ IF "%~2"=="" goto :needparams
 IF NOT "%~3"=="" goto :needparams
 
 :: download Vanta
-curl -o vanta-installer.exe https://vanta-agent.s3.amazonaws.com/latest/vanta-installer.exe
+curl -o vanta-installer.exe https://vanta-agent.s3.amazonaws.com/v0.1.0/vanta-installer.exe
 
 :: write config files
 mkdir C:\ProgramData\Vanta
 echo {"AGENT_KEY": "%1", "NEEDS_OWNER": true, "OWNER_EMAIL": "%2"} > C:\ProgramData\Vanta\enroll_secret.txt
-copy C:\ProgramData\Vanta\enroll_secret.txt C:\ProgramData\Vanta\vanta.conf 
+copy C:\ProgramData\Vanta\enroll_secret.txt C:\ProgramData\Vanta\vanta.conf
 
 :: set permissions on config files so installer doesn't overwrite
 icacls C:\ProgramData\Vanta\enroll_secret.txt /allow Everyone:R
