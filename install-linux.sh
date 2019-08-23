@@ -89,18 +89,9 @@ curl --progress-bar $PKG_URL > $PKG_PATH
 printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
 $SUDO $INSTALL_CMD $PKG_PATH
 
-##
-# Check if the agent is running
-# return val 0 means running,
-# return val 2 means running but needs to register
-##
-$SUDO vanta-cli status || [ $? == 2 ]
-
 printf "\033[32m
-Your Agent is running properly. It will continue to run in the
-background and submit data to Vanta.
+The Vanta agent has been installed successfully.
+It will continue to run in the background and submit data to Vanta.
 
 You can check the agent status using the \"vanta-cli status\" command.
-
-To register this device to a new user, run \"vanta-cli register\".
 \033[0m"
