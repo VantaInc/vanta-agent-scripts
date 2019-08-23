@@ -55,8 +55,10 @@ rm -f $PKG_PATH
 
 ##
 # check if the agent is running
+# return val 0 means running,
+# return val 2 means running but needs to register
 ##
-$SUDO vanta-cli status
+$SUDO vanta-cli status || [ $? == 2 ]
 
 printf "\033[32m
 Your Agent is running properly. It will continue to run in the
