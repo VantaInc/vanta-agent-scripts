@@ -5,7 +5,7 @@ set -e
 # VANTA_KEY (the Vanta per-domain secret key)
 # VANTA_OWNER_EMAIL (the email of the person who owns this computer. Ignored if VANTA_KEY is missing.)
 
-PKG_URL="https://vanta-agent.s3.amazonaws.com/v0.1.1/vanta.pkg"
+PKG_URL="https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta.pkg"
 PKG_PATH="/tmp/vanta.pkg"
 
 ##

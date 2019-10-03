@@ -6,8 +6,8 @@
 
 set -e
 
-DEB_URL="https://vanta-agent.s3.amazonaws.com/v0.1.1/vanta.deb"
-RPM_URL="https://vanta-agent.s3.amazonaws.com/v0.1.1/vanta.rpm"
+DEB_URL="https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta.deb"
+RPM_URL="https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta.rpm"
 DEB_PATH="/tmp/vanta.deb"
 RPM_PATH="/tmp/vanta.rpm"
 DEB_INSTALL_CMD="dpkg -i"
