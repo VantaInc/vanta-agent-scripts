@@ -6,6 +6,8 @@ set -e
 # VANTA_OWNER_EMAIL (the email of the person who owns this computer. Ignored if VANTA_KEY is missing.)
 
 PKG_URL="https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta.pkg"
+# Checksum for v0.1.2; needs to be updated when PKG_URL is updated.
+CHECKSUM="fee5a311f1d5843329b495ced4f9a596b21cec04f970c9c0a5c83a26cff9cd76"
 PKG_PATH="/tmp/vanta.pkg"
 
 ##
@@ -42,6 +44,19 @@ trap onerror ERR
 printf "\033[34m\n* Downloading the Vanta Agent\n\033[0m"
 rm -f $PKG_PATH
 curl --progress-bar $PKG_URL > $PKG_PATH
+
+##
+# Checksum
+##
+printf "\033[34m\n* Ensuring checksums match\n\033[0m"
+downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
+if [ $downloaded_checksum = $CHECKSUM ]; then
+    printf "\033[34mChecksums match.\n\033[0m"
+else
+    printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
+    exit 1
+fi
+
 ##
 # Install the agent
 ##
