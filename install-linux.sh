@@ -8,6 +8,9 @@ set -e
 
 DEB_URL="https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta.deb"
 RPM_URL="https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta.rpm"
+# Checksums for v0.1.2; need to be updated when PKG_URL is updated.
+DEB_CHECKSUM="c3f1bdb228ea7d74e0cc551b225e4ee16b2d8e012c032445a336252205e43857"
+RPM_CHECKSUM="cc4adb4ff7ba449fa7b7ddb01373da2542df811a3973f1b108cd52a6c1c0e986"
 DEB_PATH="/tmp/vanta.deb"
 RPM_PATH="/tmp/vanta.rpm"
 DEB_INSTALL_CMD="dpkg -i"
@@ -39,11 +42,13 @@ if [ $OS == "Debian" ]; then
     PKG_URL=$DEB_URL
     PKG_PATH=$DEB_PATH
     INSTALL_CMD=$DEB_INSTALL_CMD
+    CHECKSUM=$DEB_CHECKSUM
 elif [ $OS == "RedHat" ]; then
     printf "\033[34m\n* RedHat detected \n\033[0m"
     PKG_URL=$RPM_URL
     PKG_PATH=$RPM_PATH
     INSTALL_CMD=$RPM_INSTALL_CMD
+    CHECKSUM=$RPM_CHECKSUM
 else
     printf "\033[31m
 Cannot install the Vanta agent on unsupported platform $DISTRIBUTION.
@@ -82,6 +87,25 @@ trap onerror ERR
 printf "\033[34m\n* Downloading the Vanta Agent\n\033[0m"
 rm -f $PKG_PATH
 curl --progress-bar $PKG_URL > $PKG_PATH
+
+##
+# Checksum
+##
+printf "\033[34m\n* Ensuring checksums match\n\033[0m"
+
+if ! [ -x "$(command -v shasum)" ]; then
+  # For now, don't fail if shasum is not installed. Delete this check if you want to
+  # ensure that the checksum is always enforced.
+  printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
+else
+    downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
+    if [ $downloaded_checksum = $CHECKSUM ]; then
+        printf "\033[34mChecksums match.\n\033[0m"
+    else
+        printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
+        exit 1
+    fi
+fi
 
 ##
 # Install the agent
