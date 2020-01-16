@@ -12,8 +12,8 @@ echo {"AGENT_KEY": "%1", "NEEDS_OWNER": true, "OWNER_EMAIL": "%2"} > C:\ProgramD
 copy C:\ProgramData\Vanta\enroll_secret.txt C:\ProgramData\Vanta\vanta.conf
 
 :: set permissions on config files so installer doesn't overwrite
-icacls C:\ProgramData\Vanta\enroll_secret.txt /allow Everyone:R
-icacls C:\ProgramData\Vanta\vanta.conf /allow Everyone:R
+icacls C:\ProgramData\Vanta\enroll_secret.txt /grant Everyone:R
+icacls C:\ProgramData\Vanta\vanta.conf /grant Everyone:R
 icacls C:\ProgramData\Vanta\enroll_secret.txt /deny Everyone:W
 icacls C:\ProgramData\Vanta\vanta.conf /deny Everyone:W
 
@@ -22,7 +22,7 @@ vanta-installer.exe /S
 
 :: remove permissions on Everyone
 icacls C:\ProgramData\Vanta\enroll_secret.txt /remove Everyone
-icacls C:\ProgramData\Vanta\vanta.conm /remove Everyone
+icacls C:\ProgramData\Vanta\vanta.conf /remove Everyone
 
 EXIT
 
