@@ -41,5 +41,5 @@ jobs:
         install-vanta.bat fakekey name@example.com
     - name: Check that it's running correctly
       shell: cmd
-      run: vanta-cli status
+      run: C:\ProgramData\Vanta\vanta-cli status
         
