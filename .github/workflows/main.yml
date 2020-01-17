@@ -36,8 +36,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Test install on Windows
+      shell: cmd
       run: |
         install-vanta.bat fakekey name@example.com
     - name: Check that it's running correctly
+      shell: cmd
       run: vanta-cli status
         
