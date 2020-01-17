@@ -18,13 +18,26 @@ jobs:
         
   build-macos:
 
-    runs-on: macOS-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v1
-    - name: Test install on Macos
+    - name: Test install on macOS
       run: |
         chmod +x ./install-macos.sh
         VANTA_KEY=FAKEKEY ./install-macos.sh
     - name: Check that it's running correctly
       run: vanta-cli status
+  
+  build-windows:
+    
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Test install on Windows
+      run: |
+        install-vanta.bat fakekey name@example.com
+    - name: Check that it's running correctly
+      run: vanta-cli status
+        
