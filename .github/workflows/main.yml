@@ -15,7 +15,7 @@ jobs:
         VANTA_KEY=FAKEKEY ./install-linux.sh
     - name: Check that it's running correctly
       run: vanta-cli status
-  
+
   build-amazonlinux:
     runs-on: ubuntu-latest
     container: amazonlinux
@@ -24,10 +24,10 @@ jobs:
     - name: Test install on Ubuntu
       run: |
         chmod +x ./install-linux.sh
-        VANTA_KEY=FAKEKEY ./install-linux.sh
+        VANTA_NOSTART=1 VANTA_KEY=FAKEKEY ./install-linux.sh
     - name: Check that it's running correctly
       run: vanta-cli status
-        
+
   build-macos:
 
     runs-on: macos-latest
