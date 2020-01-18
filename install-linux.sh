@@ -37,6 +37,15 @@ elif [ -f /etc/SuSE-release -o "$DISTRIBUTION" == "SUSE" -o "$DISTRIBUTION" == "
     OS="SUSE"
 fi
 
+##
+# Vanta needs to be installed as root; use sudo if not already uid 0
+##
+if [ $(echo "$UID") = "0" ]; then
+    SUDO=''
+else
+    SUDO='sudo -E'
+fi
+
 if [ $OS == "Debian" ]; then
     printf "\033[34m\n* Debian detected \n\033[0m"
     PKG_URL=$DEB_URL
@@ -49,20 +58,13 @@ elif [ $OS == "RedHat" ]; then
     PKG_PATH=$RPM_PATH
     INSTALL_CMD=$RPM_INSTALL_CMD
     CHECKSUM=$RPM_CHECKSUM
+    printf "Installing binutils..."
+    $SUDO yum -y install binutils
 else
     printf "\033[31m
 Cannot install the Vanta agent on unsupported platform $DISTRIBUTION.
 Please reach out to support@vanta.com for help.
 \n\033[0m\n"
-fi
-
-##
-# Vanta needs to be installed as root; use sudo if not already uid 0
-##
-if [ $(echo "$UID") = "0" ]; then
-    SUDO=''
-else
-    SUDO='sudo -E'
 fi
 
 if [ -z "$VANTA_KEY" ]; then
@@ -93,19 +95,25 @@ curl --progress-bar $PKG_URL > $PKG_PATH
 ##
 printf "\033[34m\n* Ensuring checksums match\n\033[0m"
 
-if ! [ -x "$(command -v shasum)" ]; then
-  # For now, don't fail if shasum is not installed. Delete this check if you want to
-  # ensure that the checksum is always enforced.
-  printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
+if [ -x "$(command -v shasum)" ]; then
+  downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
+elif [ -x "$(command -v sha256sum)" ]; then
+  downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
 else
-    downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
-    if [ $downloaded_checksum = $CHECKSUM ]; then
-        printf "\033[34mChecksums match.\n\033[0m"
-    else
-        printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
-        exit 1
-    fi
+  printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
+  CHECKSUM=""
 fi
+
+if [ $downloaded_checksum = $CHECKSUM ]; then
+    printf "\033[34mChecksums match.\n\033[0m"
+else
+    printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
+    exit 1
+fi
+
+# For now, don't fail if shasum is not installed. Delete this check if you want to
+# ensure that the checksum is always enforced.
+printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
 
 ##
 # Install the agent
