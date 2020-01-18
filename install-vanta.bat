@@ -4,7 +4,7 @@ IF "%~2"=="" goto :needparams
 IF NOT "%~3"=="" goto :needparams
 
 :: download Vanta
-curl -o vanta-installer.exe https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta-installer.exe
+curl -o vanta-installer.exe https://vanta-agent.s3.amazonaws.com/v0.2.0/vanta-installer.exe
 
 :: write config files
 mkdir C:\ProgramData\Vanta
