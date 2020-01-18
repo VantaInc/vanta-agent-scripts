@@ -98,7 +98,7 @@ printf "\033[34m\n* Ensuring checksums match\n\033[0m"
 if [ -x "$(command -v shasum)" ]; then
   downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
 elif [ -x "$(command -v sha256sum)" ]; then
-  downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
+  downloaded_checksum=$(sha256sum $PKG_PATH | cut -d" " -f1)
 else
   printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
   # For now, don't fail if shasum is not installed. Delete this check if you want to
