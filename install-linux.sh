@@ -101,6 +101,8 @@ elif [ -x "$(command -v sha256sum)" ]; then
   downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
 else
   printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
+  # For now, don't fail if shasum is not installed. Delete this check if you want to
+  # ensure that the checksum is always enforced.
   CHECKSUM=""
 fi
 
@@ -110,10 +112,6 @@ else
     printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
     exit 1
 fi
-
-# For now, don't fail if shasum is not installed. Delete this check if you want to
-# ensure that the checksum is always enforced.
-printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
 
 ##
 # Install the agent
