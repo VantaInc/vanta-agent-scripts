@@ -6,11 +6,11 @@
 
 set -e
 
-DEB_URL="https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta.deb"
-RPM_URL="https://vanta-agent.s3.amazonaws.com/v0.1.2/vanta.rpm"
-# Checksums for v0.1.2; need to be updated when PKG_URL is updated.
-DEB_CHECKSUM="c3f1bdb228ea7d74e0cc551b225e4ee16b2d8e012c032445a336252205e43857"
-RPM_CHECKSUM="cc4adb4ff7ba449fa7b7ddb01373da2542df811a3973f1b108cd52a6c1c0e986"
+DEB_URL="https://vanta-agent.s3.amazonaws.com/v0.2.0/vanta.deb"
+RPM_URL="https://vanta-agent.s3.amazonaws.com/v0.2.0/vanta.rpm"
+# Checksums for v0.2.0; need to be updated when PKG_URL is updated.
+DEB_CHECKSUM="5ccccd8fd340cb184916cb27cece31eeeaabd54035753bbae9d44ba6a8bc09ec"
+RPM_CHECKSUM="4482334672b609c7997a4b9d04d89f84189af9e2d9b18a98d3cac08ab68b22b0"
 DEB_PATH="/tmp/vanta.deb"
 RPM_PATH="/tmp/vanta.rpm"
 DEB_INSTALL_CMD="dpkg -i"
@@ -37,6 +37,15 @@ elif [ -f /etc/SuSE-release -o "$DISTRIBUTION" == "SUSE" -o "$DISTRIBUTION" == "
     OS="SUSE"
 fi
 
+##
+# Vanta needs to be installed as root; use sudo if not already uid 0
+##
+if [ $(echo "$UID") = "0" ]; then
+    SUDO=''
+else
+    SUDO='sudo -E'
+fi
+
 if [ $OS == "Debian" ]; then
     printf "\033[34m\n* Debian detected \n\033[0m"
     PKG_URL=$DEB_URL
@@ -49,20 +58,13 @@ elif [ $OS == "RedHat" ]; then
     PKG_PATH=$RPM_PATH
     INSTALL_CMD=$RPM_INSTALL_CMD
     CHECKSUM=$RPM_CHECKSUM
+    printf "Installing binutils..."
+    $SUDO yum -y install binutils
 else
     printf "\033[31m
 Cannot install the Vanta agent on unsupported platform $DISTRIBUTION.
 Please reach out to support@vanta.com for help.
 \n\033[0m\n"
-fi
-
-##
-# Vanta needs to be installed as root; use sudo if not already uid 0
-##
-if [ $(echo "$UID") = "0" ]; then
-    SUDO=''
-else
-    SUDO='sudo -E'
 fi
 
 if [ -z "$VANTA_KEY" ]; then
@@ -93,18 +95,22 @@ curl --progress-bar $PKG_URL > $PKG_PATH
 ##
 printf "\033[34m\n* Ensuring checksums match\n\033[0m"
 
-if ! [ -x "$(command -v shasum)" ]; then
+if [ -x "$(command -v shasum)" ]; then
+  downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
+elif [ -x "$(command -v sha256sum)" ]; then
+  downloaded_checksum=$(sha256sum $PKG_PATH | cut -d" " -f1)
+else
+  printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
   # For now, don't fail if shasum is not installed. Delete this check if you want to
   # ensure that the checksum is always enforced.
-  printf "\033[31m shasum is not installed. Not checking binary contents. \033[0m\n"
+  CHECKSUM=""
+fi
+
+if [ $downloaded_checksum = $CHECKSUM ]; then
+    printf "\033[34mChecksums match.\n\033[0m"
 else
-    downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
-    if [ $downloaded_checksum = $CHECKSUM ]; then
-        printf "\033[34mChecksums match.\n\033[0m"
-    else
-        printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
-        exit 1
-    fi
+    printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
+    exit 1
 fi
 
 ##
