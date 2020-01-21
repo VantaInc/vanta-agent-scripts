@@ -15,10 +15,22 @@ jobs:
         VANTA_KEY=FAKEKEY ./install-linux.sh
     - name: Check that it's running correctly
       run: vanta-cli status
-        
+
+  build-amazonlinux:
+    runs-on: ubuntu-latest
+    container: amazonlinux
+    steps:
+    - uses: actions/checkout@v1
+    - name: Test install on Ubuntu
+      run: | # system manager issues in docker can be ignored for now
+        chmod +x ./install-linux.sh
+        VANTA_KEY=FAKEKEY ./install-linux.sh
+    - name: Check that the directory exists
+      run: ls /var/vanta
+
   build-macos:
 
-    runs-on: macOS-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v1
