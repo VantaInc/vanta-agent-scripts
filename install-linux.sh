@@ -6,14 +6,14 @@
 
 set -e
 
-DEB_URL="https://vanta-agent.s3.amazonaws.com/v1.3.1/vanta.deb"
-RPM_URL="https://vanta-agent.s3.amazonaws.com/v1.3.1/vanta.rpm"
-# Checksums for v1.3.1; need to be updated when PKG_URL is updated.
-DEB_CHECKSUM="9ef79b1c8bdcfe2e74c6747a16a8c741e980d453ff490addc3f9170d71b6bd6b"
-RPM_CHECKSUM="c2435b4cfad50be9daa21d95c7622f926474ae4ae1957f67e8ff47283b9a15c6"
+DEB_URL="https://vanta-agent.s3.amazonaws.com/v1.4.0/vanta.deb"
+RPM_URL="https://vanta-agent.s3.amazonaws.com/v1.4.0/vanta.rpm"
+# Checksums for v1.4.0; need to be updated when PKG_URL is updated.
+DEB_CHECKSUM="abb6fbadebbf8179e349d0a54257829b386dabe0b76e6b195ddd3b05f552cd74"
+RPM_CHECKSUM="10cea2622bf286c224a71b63b9b626ec387a80f4f7699f15e7da86bce0879415"
 DEB_PATH="/tmp/vanta.deb"
 RPM_PATH="/tmp/vanta.rpm"
-DEB_INSTALL_CMD="dpkg -Ei"
+DEB_INSTALL_CMD="dpkg -i" # change to -Ei if you don't want to reinstall over the same version
 RPM_INSTALL_CMD="rpm -i"
 
 # OS/Distro Detection
