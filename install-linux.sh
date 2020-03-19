@@ -13,7 +13,7 @@ DEB_CHECKSUM="9ef79b1c8bdcfe2e74c6747a16a8c741e980d453ff490addc3f9170d71b6bd6b"
 RPM_CHECKSUM="c2435b4cfad50be9daa21d95c7622f926474ae4ae1957f67e8ff47283b9a15c6"
 DEB_PATH="/tmp/vanta.deb"
 RPM_PATH="/tmp/vanta.rpm"
-DEB_INSTALL_CMD="dpkg -i"
+DEB_INSTALL_CMD="dpkg -Ei"
 RPM_INSTALL_CMD="rpm -i"
 
 # OS/Distro Detection
