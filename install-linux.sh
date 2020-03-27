@@ -13,7 +13,7 @@ DEB_CHECKSUM="abb6fbadebbf8179e349d0a54257829b386dabe0b76e6b195ddd3b05f552cd74"
 RPM_CHECKSUM="10cea2622bf286c224a71b63b9b626ec387a80f4f7699f15e7da86bce0879415"
 DEB_PATH="/tmp/vanta.deb"
 RPM_PATH="/tmp/vanta.rpm"
-DEB_INSTALL_CMD="dpkg -i" # change to -Ei if you don't want to reinstall over the same version
+DEB_INSTALL_CMD="dpkg -Ei"
 RPM_INSTALL_CMD="rpm -i"
 
 # OS/Distro Detection
