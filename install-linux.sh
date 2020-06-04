@@ -120,21 +120,6 @@ printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your pass
 $SUDO $INSTALL_CMD $PKG_PATH
 
 ##
-# Check whether the agent is registered. It may take a couple of seconds, so try 3 times with 3-second
-# pauses in between.
-##
-printf "\033[34m\n* Checking registration with Vanta\n\033[0m"
-registration_success=false
-for _ in {1..3}
-do
-    if /var/vanta/vanta-cli check-registration; then
-        registration_success=true
-        break
-    fi
-    sleep 3
-done
-
-##
 # Check whether the agent is registered. It may take a couple of seconds,
 # so try 3 times with 3-second pauses in between.
 ##
