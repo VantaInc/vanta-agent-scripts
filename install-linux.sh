@@ -123,7 +123,7 @@ $SUDO $INSTALL_CMD $PKG_PATH
 # Check whether the agent is registered. It may take a couple of seconds,
 # so try 3 times with 3-second pauses in between.
 ##
-if [ -z "$VANTA_SKIP_REGISTRATION_CHECK" ] || [ -z "$VANTA_NOSTART" ]; then
+if [ -z "$VANTA_SKIP_REGISTRATION_CHECK" ] && [ -z "$VANTA_NOSTART" ]; then
     printf "\033[34m\n* Checking registration with Vanta\n\033[0m"
     registration_success=false
     for i in {1..3}
