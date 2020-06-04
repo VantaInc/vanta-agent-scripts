@@ -123,25 +123,29 @@ $SUDO $INSTALL_CMD $PKG_PATH
 # Check whether the agent is registered. It may take a couple of seconds,
 # so try 3 times with 3-second pauses in between.
 ##
-printf "\033[34m\n* Checking registration with Vanta\n\033[0m"
-registration_success=false
-for i in {1..3}
-do
-    echo "Attempt $i/3"
-    if $SUDO /var/vanta/vanta-cli check-registration; then
-        registration_success=true
-        break
+if [ -z "$VANTA_SKIP_REGISTRATION_CHECK" ]; then
+    printf "\033[34m\n* Checking registration with Vanta\n\033[0m"
+    registration_success=false
+    for i in {1..3}
+    do
+        echo "Attempt $i/3"
+        if $SUDO /var/vanta/vanta-cli check-registration; then
+            registration_success=true
+            break
+        fi
+        sleep 3
+    done
+
+    if [ "$registration_success" = false ] ; then
+        printf "\033[31m
+    Could not verify that the agent is registered to a Vanta domain. Are you sure you used the right key?
+    \n\033[0m\n"
+        exit 1
     fi
-    sleep 3
-done
 
-if [ "$registration_success" = false ] ; then
-    printf "\033[31m
-Could not verify that the agent is registered to a Vanta domain. Are you sure you used the right key?
-\n\033[0m\n"
-    exit 1
+else
+    printf "\033[34m\n* Skipping registration check\n\033[0m"
 fi
-
 
 printf "\033[32m
 The Vanta agent has been installed successfully.

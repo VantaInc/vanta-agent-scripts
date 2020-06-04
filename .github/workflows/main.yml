@@ -4,56 +4,52 @@ on: [push]
 
 jobs:
   build-ubuntu:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Test install on Ubuntu
-      run: |
-        chmod +x ./install-linux.sh
-        VANTA_KEY=FAKEKEY ./install-linux.sh
-    - name: Check that it's running correctly
-      run: vanta-cli status
+      - uses: actions/checkout@v1
+      - name: Test install on Ubuntu
+        run: |
+          chmod +x ./install-linux.sh
+          VANTA_SKIP_REGISTRATION_CHECK=1 VANTA_KEY=FAKEKEY ./install-linux.sh
+      - name: Check that it's running correctly
+        run: vanta-cli status
 
   build-amazonlinux:
-
     runs-on: ubuntu-latest
 
     container: amazonlinux
     steps:
-    - uses: actions/checkout@v1
-    - name: Test install on Ubuntu
-      run: | # system manager issues in docker can be ignored for now
-        chmod +x ./install-linux.sh
-        VANTA_KEY=FAKEKEY ./install-linux.sh
-    - name: Check that the directory exists
-      run: ls /var/vanta
+      - uses: actions/checkout@v1
+      - name: Test install on Ubuntu
+        run: | # system manager issues in docker can be ignored for now
+          chmod +x ./install-linux.sh
+          VANTA_SKIP_REGISTRATION_CHECK=1 VANTA_KEY=FAKEKEY ./install-linux.sh
+      - name: Check that the directory exists
+        run: ls /var/vanta
 
   build-macos:
-
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Test install on macOS
-      run: |
-        chmod +x ./install-macos.sh
-        VANTA_KEY=FAKEKEY ./install-macos.sh
-    - name: Check that it's running correctly
-      run: vanta-cli status
+      - uses: actions/checkout@v1
+      - name: Test install on macOS
+        run: |
+          chmod +x ./install-macos.sh
+          VANTA_KEY=FAKEKEY ./install-macos.sh
+      - name: Check that it's running correctly
+        run: vanta-cli status
 
   build-windows:
-
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Test install on Windows
-      shell: cmd
-      run: |
-        install-vanta.bat fakekey name@example.com
-    - name: Check that the directory exists
-      shell: cmd
-      run: |
-        dir C:\ProgramData\Vanta
+      - uses: actions/checkout@v1
+      - name: Test install on Windows
+        shell: cmd
+        run: |
+          install-vanta.bat fakekey name@example.com
+      - name: Check that the directory exists
+        shell: cmd
+        run: |
+          dir C:\ProgramData\Vanta
