@@ -1,4 +1,7 @@
 @echo off
+
+echo "This script is deprecated, and is scheduled to be removed. Follow the instructions at https://app.vanta.com/computers instead."
+
 :: check to make sure that both AGENT_KEY and OWNER_EMAIL are specified
 IF "%~1"=="" goto :needparams
 IF "%~2"=="" goto :needparams
