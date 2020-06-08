@@ -119,9 +119,37 @@ fi
 printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
 $SUDO $INSTALL_CMD $PKG_PATH
 
+##
+# Check whether the agent is registered. It may take a couple of seconds,
+# so try 3 times with 3-second pauses in between.
+##
+if [ -z "$VANTA_SKIP_REGISTRATION_CHECK" ] && [ -z "$VANTA_NOSTART" ]; then
+    printf "\033[34m\n* Checking registration with Vanta\n\033[0m"
+    registration_success=false
+    for i in {1..3}
+    do
+        echo "Attempt $i/3"
+        if $SUDO /var/vanta/vanta-cli check-registration; then
+            registration_success=true
+            break
+        fi
+        sleep 3
+    done
+
+    if [ "$registration_success" = false ] ; then
+        printf "\033[31m
+    Could not verify that the agent is registered to a Vanta domain. Are you sure you used the right key?
+    \n\033[0m\n" >&2
+        exit 0
+    fi
+
+else
+    printf "\033[34m\n* Skipping registration check\n\033[0m"
+fi
+
 printf "\033[32m
 The Vanta agent has been installed successfully.
-It will continue to run in the background and submit data to Vanta.
+It will run in the background and submit data to Vanta.
 
 You can check the agent status using the \"vanta-cli status\" command.
 \033[0m"
