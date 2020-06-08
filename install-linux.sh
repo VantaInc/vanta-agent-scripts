@@ -139,8 +139,8 @@ if [ -z "$VANTA_SKIP_REGISTRATION_CHECK" ] && [ -z "$VANTA_NOSTART" ]; then
     if [ "$registration_success" = false ] ; then
         printf "\033[31m
     Could not verify that the agent is registered to a Vanta domain. Are you sure you used the right key?
-    \n\033[0m\n"
-        exit 1
+    \n\033[0m\n" >&2
+        exit 0
     fi
 
 else
