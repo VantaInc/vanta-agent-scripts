@@ -126,16 +126,15 @@ $SUDO $INSTALL_CMD $PKG_PATH
 if [ -z "$VANTA_SKIP_REGISTRATION_CHECK" ] && [ -z "$VANTA_NOSTART" ]; then
     printf "\033[34m\n* Checking registration with Vanta\n\033[0m"
     registration_success=false
-    # It always fails on the first attempt so we might as well pause here.
-    sleep 5
     for i in {1..5}
     do
+        # Pause first, as the chances of registration working immediately are low.
+        sleep 5
         echo "Attempt $i/5"
         if $SUDO /var/vanta/vanta-cli check-registration; then
             registration_success=true
             break
         fi
-        sleep 5
     done
 
     if [ "$registration_success" = false ] ; then
