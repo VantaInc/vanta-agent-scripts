@@ -39,17 +39,3 @@ jobs:
           VANTA_KEY=FAKEKEY ./install-macos.sh
       - name: Check that it's running correctly
         run: vanta-cli status
-
-  build-windows:
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v1
-      - name: Test install on Windows
-        shell: cmd
-        run: |
-          install-vanta.bat fakekey name@example.com
-      - name: Check that the directory exists
-        shell: cmd
-        run: |
-          dir C:\ProgramData\Vanta
