@@ -58,8 +58,6 @@ elif [ $OS == "RedHat" ]; then
     PKG_PATH=$RPM_PATH
     INSTALL_CMD=$RPM_INSTALL_CMD
     CHECKSUM=$RPM_CHECKSUM
-    printf "Installing binutils..."
-    $SUDO yum -y install binutils
 else
     printf "\033[31m
 Cannot install the Vanta agent on unsupported platform $DISTRIBUTION.
