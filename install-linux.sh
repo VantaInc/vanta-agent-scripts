@@ -60,7 +60,7 @@ elif [ "${OS}" == "RedHat" ]; then
     CHECKSUM=$RPM_CHECKSUM
 else
     printf "\033[31m
-Cannot install the Vanta agent on unsupported platform $DISTRIBUTION.
+Cannot install the Vanta agent on unsupported platform $(lsb_release -sd).
 Please reach out to support@vanta.com for help.
 \n\033[0m\n"
 fi
