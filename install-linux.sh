@@ -40,7 +40,7 @@ fi
 ##
 # Vanta needs to be installed as root; use sudo if not already uid 0
 ##
-if [ "$(echo "$UID")" = "0" ]; then
+if [ $(echo "$UID") = "0" ]; then
     SUDO=''
 else
     SUDO='sudo -E'
