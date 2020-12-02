@@ -37,27 +37,22 @@ elif [ -f /etc/SuSE-release -o "$DISTRIBUTION" == "SUSE" -o "$DISTRIBUTION" == "
     OS="SUSE"
 fi
 
-[ -z "${OS}" ] && {
-    echo "$(lsb_release -sd) is not a supported operating system"
-    exit 1
-}
-
 ##
 # Vanta needs to be installed as root; use sudo if not already uid 0
 ##
-if [ $(echo "$UID") = "0" ]; then
+if [ "$(echo "$UID")" = "0" ]; then
     SUDO=''
 else
     SUDO='sudo -E'
 fi
 
-if [ $OS == "Debian" ]; then
+if [ "${OS}" == "Debian" ]; then
     printf "\033[34m\n* Debian detected \n\033[0m"
     PKG_URL=$DEB_URL
     PKG_PATH=$DEB_PATH
     INSTALL_CMD=$DEB_INSTALL_CMD
     CHECKSUM=$DEB_CHECKSUM
-elif [ $OS == "RedHat" ]; then
+elif [ "${OS}" == "RedHat" ]; then
     printf "\033[34m\n* RedHat detected \n\033[0m"
     PKG_URL=$RPM_URL
     PKG_PATH=$RPM_PATH
@@ -83,6 +78,8 @@ Something went wrong while installing the Vanta agent.
 
 If you're having trouble installing, please send an email to support@vanta.com, and we'll help you fix it!
 \n\033[0m\n"
+
+    exit 1
 }
 trap onerror ERR
 
