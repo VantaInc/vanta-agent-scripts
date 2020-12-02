@@ -37,6 +37,11 @@ elif [ -f /etc/SuSE-release -o "$DISTRIBUTION" == "SUSE" -o "$DISTRIBUTION" == "
     OS="SUSE"
 fi
 
+[ -z "${OS}" ] && {
+    echo "$(lsb_release -sd) is not a supported operating system"
+    exit 1
+}
+
 ##
 # Vanta needs to be installed as root; use sudo if not already uid 0
 ##
