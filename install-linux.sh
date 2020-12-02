@@ -63,6 +63,7 @@ else
 Cannot install the Vanta agent on unsupported platform $(lsb_release -sd).
 Please reach out to support@vanta.com for help.
 \n\033[0m\n"
+    exit 1
 fi
 
 if [ -z "$VANTA_KEY" ]; then
@@ -78,8 +79,6 @@ Something went wrong while installing the Vanta agent.
 
 If you're having trouble installing, please send an email to support@vanta.com, and we'll help you fix it!
 \n\033[0m\n"
-
-    exit 1
 }
 trap onerror ERR
 
