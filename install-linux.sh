@@ -50,7 +50,7 @@ if ! command -v lsb_release &> /dev/null; then
     NO_LSB=true
 fi
 
-function get_distribution() {
+function get_platform() {
     if [ -n "${NO_LSB}" ]; then
         echo "${DISTRIBUTION}"
     else
