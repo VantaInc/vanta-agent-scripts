@@ -54,7 +54,7 @@ function get_platform() {
     if [ -n "${NO_LSB}" ]; then
         echo "${DISTRIBUTION}"
     else
-	lsb_release -s
+	lsb_release -sd
     fi
 }
 
