@@ -48,10 +48,6 @@ fi
 
 function get_platform() {
     if ! command -v lsb_release &> /dev/null; then
-        NO_LSB=true
-    fi
-
-    if [ -n "${NO_LSB}" ]; then
         echo "${DISTRIBUTION}"
     else
 	lsb_release -sd
