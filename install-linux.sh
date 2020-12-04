@@ -46,13 +46,21 @@ else
     SUDO='sudo -E'
 fi
 
-if [ $OS == "Debian" ]; then
+function get_platform() {
+    if ! command -v lsb_release &> /dev/null; then
+        echo "${DISTRIBUTION}"
+    else
+	lsb_release -sd
+    fi
+}
+
+if [ "${OS}" == "Debian" ]; then
     printf "\033[34m\n* Debian detected \n\033[0m"
     PKG_URL=$DEB_URL
     PKG_PATH=$DEB_PATH
     INSTALL_CMD=$DEB_INSTALL_CMD
     CHECKSUM=$DEB_CHECKSUM
-elif [ $OS == "RedHat" ]; then
+elif [ "${OS}" == "RedHat" ]; then
     printf "\033[34m\n* RedHat detected \n\033[0m"
     PKG_URL=$RPM_URL
     PKG_PATH=$RPM_PATH
@@ -60,9 +68,10 @@ elif [ $OS == "RedHat" ]; then
     CHECKSUM=$RPM_CHECKSUM
 else
     printf "\033[31m
-Cannot install the Vanta agent on unsupported platform $DISTRIBUTION.
+Cannot install the Vanta agent on unsupported platform $(get_platform).
 Please reach out to support@vanta.com for help.
 \n\033[0m\n"
+    exit 1
 fi
 
 if [ -z "$VANTA_KEY" ]; then
