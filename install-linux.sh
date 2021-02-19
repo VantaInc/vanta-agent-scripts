@@ -6,11 +6,11 @@
 
 set -e
 
-DEB_URL="https://vanta-agent.s3.amazonaws.com/v1.7.0/vanta.deb"
-RPM_URL="https://vanta-agent.s3.amazonaws.com/v1.7.0/vanta.rpm"
+DEB_URL="https://vanta-agent.s3.amazonaws.com/v1.7.1/vanta.deb"
+RPM_URL="https://vanta-agent.s3.amazonaws.com/v1.7.1/vanta.rpm"
 # Checksums need to be updated when PKG_URL is updated.
-DEB_CHECKSUM="98bf7dcf6a86acad6e0ab0aac9a91af26fbda9add6aa726962385f73b5e5f9d7"
-RPM_CHECKSUM="cd67d5ce1e2e026faa516b2a64d7b2984f43cc3d057c9e23241096e9c55e8555"
+DEB_CHECKSUM="b0c6605f6620d8c44cddeee4ad318b46cd0be6c65465dbab427fe3ab10edf944"
+RPM_CHECKSUM="c19689b072b290106a4046613a36a9e6b7745abbf3ea857fcf7785bc9d36c7fe"
 DEB_PATH="/tmp/vanta.deb"
 RPM_PATH="/tmp/vanta.rpm"
 DEB_INSTALL_CMD="dpkg -Ei"
