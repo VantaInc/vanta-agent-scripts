@@ -3,6 +3,7 @@
 # Available environment variables:
 # VANTA_KEY (the Vanta per-domain secret key)
 # VANTA_NOSTART (if true, then don't start the service upon installation.)
+# VANTA_EXPERIMENTAL_SELINUX (if true, then also install the SELinux package). Currently Redhat/Centos only.
 
 set -e
 
@@ -15,6 +16,9 @@ DEB_PATH="/tmp/vanta.deb"
 RPM_PATH="/tmp/vanta.rpm"
 DEB_INSTALL_CMD="dpkg -Ei"
 RPM_INSTALL_CMD="rpm -i"
+
+SELINUX_PATH="/tmp/vanta_selinux.rpm"
+SELINUX_URL="https://vanta-agent.s3.amazonaws.com/vanta_agent_selinux-1.0-1.el8.noarch.rpm"
 
 # OS/Distro Detection
 # Try lsb_release, fallback with /etc/issue then uname command
@@ -81,6 +85,26 @@ You must specify the VANTA_KEY environment variable in order to install the agen
     exit 1
 fi
 
+if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
+    if  [ -z "$VANTA_NOSTART" ]; then
+        printf "\033[31m
+    You must specify the VANTA_NOSTART environment variable when using VANTA_EXPERIMENTAL_SELINUX.
+    \n\033[0m\n"
+        exit 1
+    fi
+
+    if [ "${OS}" != "Redhat" ]; then
+        printf "\033[31m
+    SELinux support is not available on your OS.
+    \n\033[0m\n"
+        exit 1
+    fi
+
+    printf "\033[34m\n* Downloading the SELinux package\n\033[0m"
+    rm -f $SELINUX_PATH
+    curl --progress-bar $SELINUX_URL > $SELINUX_PATH
+fi
+
 function onerror() {
     printf "\033[31m$ERROR_MESSAGE
 Something went wrong while installing the Vanta agent.
@@ -125,6 +149,15 @@ fi
 ##
 printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
 $SUDO $INSTALL_CMD $PKG_PATH
+
+##
+# Install the SELinux package
+##
+if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
+    printf "\033[34m\n* Installing SELinux support\n\033[0m"
+    $SUDO $INSTALL_CMD $SELINUX_PATH
+fi
+
 
 ##
 # Check whether the agent is registered. It may take a couple of seconds,
