@@ -85,18 +85,24 @@ You must specify the VANTA_KEY environment variable in order to install the agen
     exit 1
 fi
 
-if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ] && [ -z "$VANTA_NOSTART" ]; then
-    printf "\033[31m
-You must specify the VANTA_NOSTART environment variable when using VANTA_EXPERIMENTAL_SELINUX.
-\n\033[0m\n"
-    exit 1
-fi
+if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
+    if  [ -z "$VANTA_NOSTART" ]; then
+        printf "\033[31m
+    You must specify the VANTA_NOSTART environment variable when using VANTA_EXPERIMENTAL_SELINUX.
+    \n\033[0m\n"
+        exit 1
+    fi
 
-if [ "${OS}" == "Redhat" ] && [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
-    printf "\033[31m
-SELinux support is not available on your OS.
-\n\033[0m\n"
-    exit 1
+    if [ "${OS}" != "Redhat" ]; then
+        printf "\033[31m
+    SELinux support is not available on your OS.
+    \n\033[0m\n"
+        exit 1
+    fi
+
+        printf "\033[34m\n* Downloading the SELinux package\n\033[0m"
+    rm -f $SELINUX_PATH
+    curl --progress-bar $SELINUX_URL > $SELINUX_PATH
 fi
 
 function onerror() {
@@ -114,16 +120,6 @@ trap onerror ERR
 printf "\033[34m\n* Downloading the Vanta Agent\n\033[0m"
 rm -f $PKG_PATH
 curl --progress-bar $PKG_URL > $PKG_PATH
-
-
-##
-# Download the SELinux package
-##
-if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
-    printf "\033[34m\n* Downloading the SELinux package\n\033[0m"
-    rm -f $SELINUX_PATH
-    curl --progress-bar $SELINUX_URL > $SELINUX_PATH
-fi
 
 ##
 # Checksum
