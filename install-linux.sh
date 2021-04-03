@@ -100,7 +100,7 @@ if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
         exit 1
     fi
 
-        printf "\033[34m\n* Downloading the SELinux package\n\033[0m"
+    printf "\033[34m\n* Downloading the SELinux package\n\033[0m"
     rm -f $SELINUX_PATH
     curl --progress-bar $SELINUX_URL > $SELINUX_PATH
 fi
