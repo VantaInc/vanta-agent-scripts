@@ -93,7 +93,7 @@ if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
         exit 1
     fi
 
-    if [ "${OS}" != "Redhat" ]; then
+    if [ "${OS}" != "RedHat" ]; then
         printf "\033[31m
     SELinux support is not available on your OS.
     \n\033[0m\n"
