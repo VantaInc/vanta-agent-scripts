@@ -18,7 +18,7 @@ DEB_INSTALL_CMD="dpkg -Ei"
 RPM_INSTALL_CMD="rpm -i"
 
 SELINUX_PATH="/tmp/vanta_selinux.rpm"
-SELINUX_URL="https://vanta-agent.s3.amazonaws.com/vanta_agent_selinux-1.1-1.el8.noarch.rpm"
+SELINUX_URL="https://vanta-agent.s3.amazonaws.com/vanta_agent_selinux-1.2-1.el8.noarch.rpm"
 
 # OS/Distro Detection
 # Try lsb_release, fallback with /etc/issue then uname command
