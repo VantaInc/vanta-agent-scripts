@@ -13,7 +13,7 @@ jobs:
           chmod +x ./install-linux.sh
           VANTA_SKIP_REGISTRATION_CHECK=1 VANTA_KEY=FAKEKEY ./install-linux.sh
       - name: Check that it's running correctly
-        run: vanta-cli status
+        run: /var/vanta/vanta-cli status
 
   build-amazonlinux:
     runs-on: ubuntu-latest
@@ -38,4 +38,4 @@ jobs:
           chmod +x ./install-macos.sh
           VANTA_KEY=FAKEKEY ./install-macos.sh
       - name: Check that it's running correctly
-        run: vanta-cli status
+        run: /usr/local/vanta/vanta-cli status
