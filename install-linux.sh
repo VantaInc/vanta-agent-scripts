@@ -20,6 +20,8 @@ RPM_INSTALL_CMD="rpm -i"
 SELINUX_PATH="/tmp/vanta_selinux.rpm"
 SELINUX_URL="https://vanta-agent.s3.amazonaws.com/vanta_agent_selinux-1.2-1.el8.noarch.rpm"
 
+UUID_PATH="/sys/class/dmi/id/product_uuid"
+
 # OS/Distro Detection
 # Try lsb_release, fallback with /etc/issue then uname command
 # Detection code taken from https://github.com/DataDog/datadog-agent/blob/master/cmd/agent/install_script.sh
@@ -77,6 +79,28 @@ Please reach out to support@vanta.com for help.
 \n\033[0m\n"
     exit 1
 fi
+
+if [ ! -f "$UUID_PATH" ]; then
+    printf "\033[31m
+Unable to detect hardware UUID – the Vanta Agent is only supported on platforms which provide a value in $UUID_PATH
+\n\033[0m\n"
+    exit 1
+fi
+
+if [ -x "$(command -v fold)" ] && [ -x "$(command -v uniq)" ] && [ -x "$(command -v wc)" ]; then
+    printf "\033[34m\n* Checking UUID...\n\033[0m"
+    # Heuristic to check for a valid UUID – if there are exactly 2 unique characters in the UUID, then it must be
+    # a constant like FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF, which we don't support.
+    num_unique_characters_in_uuid=$($SUDO fold -b1 /sys/class/dmi/id/product_uuid | sort | uniq | wc -l)
+    if [ "$num_unique_characters_in_uuid" = "2" ]; then
+        printf "\033[31m
+Invalid hardware UUID – the Vanta Agent is only supported on platforms which provide a unique value in $UUID_PATH
+\n\033[0m\n"
+        exit 1
+    fi
+    printf "\033[34m\nUUID check passed.\n\033[0m"
+fi
+
 
 if [ -z "$VANTA_KEY" ]; then
     printf "\033[31m
