@@ -26,14 +26,6 @@ You must specify the VANTA_KEY environment variable in order to install the agen
     exit 1
 fi
 
-if [ $(/usr/bin/arch) == "arm64" ] && [ ! -f "/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist" ]; then
-    printf "\033[31m
-You must set up Rosetta on your Mac in order to install the agent. Please
-follow the setup instructions from Apple here: https://support.apple.com/en-us/HT211861.
-\n\033[0m\n"
-    exit 1
-fi
-
 function onerror() {
     printf "\033[31m$ERROR_MESSAGE
 Something went wrong while installing the Vanta agent.
