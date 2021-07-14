@@ -87,19 +87,34 @@ Unable to detect hardware UUID – the Vanta Agent is only supported on platform
     exit 1
 fi
 
-if [ -x "$(command -v fold)" ] && [ -x "$(command -v uniq)" ] && [ -x "$(command -v wc)" ]; then
-    printf "\033[34m\n* Checking UUID...\n\033[0m"
-    # Heuristic to check for a valid UUID – if there are exactly 2 unique characters in the UUID, then it must be
-    # a constant like FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF, which we don't support.
-    num_unique_characters_in_uuid=$($SUDO fold -b1 /sys/class/dmi/id/product_uuid | sort | uniq | wc -l)
-    if [ "$num_unique_characters_in_uuid" = "2" ]; then
+hardware_uuid=$($SUDO cat $UUID_PATH)
+
+printf "\033[34m\nHardware UUID: $hardware_uuid\n\033[0m"
+
+bad_uuids=(
+    "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+    "ffffffff-ffff-ffff-ffff-ffffffffffff"
+    "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA"
+    "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+    "00000000-0000-0000-0000-000000000000"
+    "11111111-1111-1111-1111-111111111111"
+    "03000200-0400-0500-0006-000700080009"
+    "03020100-0504-0706-0809-0a0b0c0d0e0f"
+    "03020100-0504-0706-0809-0a0b0c0d0e0f"
+    "10000000-0000-8000-0040-000000000000"
+    "01234567-8910-1112-1314-151617181920"
+)
+
+for uuid in ${bad_uuids[*]}; do
+    if [ "$uuid" = "$hardware_uuid" ]; then
         printf "\033[31m
 Invalid hardware UUID – the Vanta Agent is only supported on platforms which provide a unique value in $UUID_PATH
 \n\033[0m\n"
         exit 1
     fi
-    printf "\033[34m\nUUID check passed.\n\033[0m"
-fi
+done
+printf "\033[34m\nUUID check passed.\n\033[0m"
+
 
 
 if [ -z "$VANTA_KEY" ]; then
