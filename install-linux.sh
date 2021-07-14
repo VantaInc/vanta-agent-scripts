@@ -20,6 +20,8 @@ RPM_INSTALL_CMD="rpm -i"
 SELINUX_PATH="/tmp/vanta_selinux.rpm"
 SELINUX_URL="https://vanta-agent.s3.amazonaws.com/vanta_agent_selinux-1.2-1.el8.noarch.rpm"
 
+UUID_PATH="/sys/class/dmi/id/product_uuid"
+
 # OS/Distro Detection
 # Try lsb_release, fallback with /etc/issue then uname command
 # Detection code taken from https://github.com/DataDog/datadog-agent/blob/master/cmd/agent/install_script.sh
@@ -77,6 +79,43 @@ Please reach out to support@vanta.com for help.
 \n\033[0m\n"
     exit 1
 fi
+
+if [ ! -f "$UUID_PATH" ]; then
+    printf "\033[31m
+Unable to detect hardware UUID – the Vanta Agent is only supported on platforms which provide a value in $UUID_PATH
+\n\033[0m\n"
+    exit 1
+fi
+
+hardware_uuid=$($SUDO cat $UUID_PATH)
+
+printf "\033[34m\nHardware UUID: $hardware_uuid\n\033[0m"
+
+bad_uuids=(
+    "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+    "ffffffff-ffff-ffff-ffff-ffffffffffff"
+    "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA"
+    "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+    "00000000-0000-0000-0000-000000000000"
+    "11111111-1111-1111-1111-111111111111"
+    "03000200-0400-0500-0006-000700080009"
+    "03020100-0504-0706-0809-0a0b0c0d0e0f"
+    "03020100-0504-0706-0809-0a0b0c0d0e0f"
+    "10000000-0000-8000-0040-000000000000"
+    "01234567-8910-1112-1314-151617181920"
+)
+
+for uuid in ${bad_uuids[*]}; do
+    if [ "$uuid" = "$hardware_uuid" ]; then
+        printf "\033[31m
+Invalid hardware UUID – the Vanta Agent is only supported on platforms which provide a unique value in $UUID_PATH
+\n\033[0m\n"
+        exit 1
+    fi
+done
+printf "\033[34m\nUUID check passed.\n\033[0m"
+
+
 
 if [ -z "$VANTA_KEY" ]; then
     printf "\033[31m
