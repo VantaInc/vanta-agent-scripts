@@ -8,7 +8,7 @@ set -e
 PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.0.0/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
 CHECKSUM="93042c2421767323557f1fa600fd971aebe1c402bd75609a18e215608ae47b2c"
-PKG_PATH="/tmp/vanta.pkg"
+PKG_PATH="$(mktemp -d)/vanta.pkg"
 
 ##
 # Vanta needs to be installed as root; use sudo if not already uid 0

@@ -12,12 +12,12 @@ RPM_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.0.0/vanta-
 # Checksums need to be updated when PKG_URL is updated.
 DEB_CHECKSUM="54e9043e0ee2bb454b85ccb9e6eb2ef2b839b24545d99f524700757d918ea508"
 RPM_CHECKSUM="7539237b1275966ddb741739853f108f28603e909f09f3baccb1383fbc904522"
-DEB_PATH="/tmp/vanta.deb"
-RPM_PATH="/tmp/vanta.rpm"
+DEB_PATH="$(mktemp -d)/vanta.deb"
+RPM_PATH="$(mktemp -d)/vanta.rpm"
 DEB_INSTALL_CMD="dpkg -Ei"
 RPM_INSTALL_CMD="rpm -i"
 
-SELINUX_PATH="/tmp/vanta_selinux.rpm"
+SELINUX_PATH="$(mktemp -d)/vanta_selinux.rpm"
 SELINUX_URL="https://vanta-agent.s3.amazonaws.com/vanta_agent_selinux-1.2-1.el8.noarch.rpm"
 
 UUID_PATH="/sys/class/dmi/id/product_uuid"
