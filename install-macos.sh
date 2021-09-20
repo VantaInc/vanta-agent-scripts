@@ -29,8 +29,8 @@ fi
 
 if [ $(/usr/bin/arch) == "arm64" ] && ! /usr/bin/pgrep oahd >/dev/null 2>&1; then
     printf "\033[31m
-You must set up Rosetta on your Mac in order to install the agent. Please
-follow the setup instructions from Apple here: https://support.apple.com/en-us/HT211861.
+You must set up Rosetta on your Mac in order to install the agent. You can find information
+about Rosetta here: https://support.apple.com/en-us/HT211861.
 To install Rosetta, run
     /usr/sbin/softwareupdate --install-rosetta
 \n\033[0m\n"
