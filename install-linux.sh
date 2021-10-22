@@ -9,9 +9,11 @@ set -e
 
 DEB_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.0.3/vanta-amd64.deb"
 RPM_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.0.3/vanta-amd64.rpm"
+RPM_ARM_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.0.3/vanta-arm64.rpm"
 # Checksums need to be updated when PKG_URL is updated.
 DEB_CHECKSUM="2d25af250f3ef1656283cf42fcc6c737a052adfeda765d266b034d21226e3842"
 RPM_CHECKSUM="807dafac4eb46a396344e8932d71d4395ecf56ac94a1d73f8fb16dea3281760f"
+RPM_ARM_CHECKSUM="3af19143e971a1750d2d4e7c169191f149f947c74f13131f4ca522086bc7caaf"
 DEB_PATH="$(mktemp -d)/vanta.deb"
 RPM_PATH="$(mktemp -d)/vanta.rpm"
 DEB_INSTALL_CMD="dpkg -Ei"
@@ -27,6 +29,7 @@ UUID_PATH="/sys/class/dmi/id/product_uuid"
 # Detection code taken from https://github.com/DataDog/datadog-agent/blob/master/cmd/agent/install_script.sh
 KNOWN_DISTRIBUTION="(Debian|Ubuntu|RedHat|CentOS|openSUSE|Amazon|Arista|SUSE)"
 DISTRIBUTION=$(lsb_release -d 2>/dev/null | grep -Eo $KNOWN_DISTRIBUTION  || grep -Eo $KNOWN_DISTRIBUTION /etc/issue 2>/dev/null || grep -Eo $KNOWN_DISTRIBUTION /etc/Eos-release 2>/dev/null || grep -m1 -Eo $KNOWN_DISTRIBUTION /etc/os-release 2>/dev/null || uname -s)
+ARCHITECTURE=$(uname -m)
 
 if [ -f /etc/debian_version -o "$DISTRIBUTION" == "Debian" -o "$DISTRIBUTION" == "Ubuntu" ]; then
     OS="Debian"
@@ -72,6 +75,11 @@ elif [ "${OS}" == "RedHat" ]; then
     PKG_PATH=$RPM_PATH
     INSTALL_CMD=$RPM_INSTALL_CMD
     CHECKSUM=$RPM_CHECKSUM
+    if [ "${ARCHITECTURE}" == "aarch64" ]; then
+      printf "\033[34m\n* ARM detected \n\033[0m"
+      PKG_URL=$RPM_ARM_URL
+      CHECKSUM=$RPM_ARM_CHECKSUM
+    fi
 else
     printf "\033[31m
 Cannot install the Vanta agent on unsupported platform $(get_platform).
