@@ -231,5 +231,5 @@ printf "\033[32m
 The Vanta agent has been installed successfully.
 It will run in the background and submit data to Vanta.
 
-You can check the agent status using the \"vanta-cli status\" command.
+You can check the agent status using the \"/var/vanta/vanta-cli status\" command.
 \033[0m"
