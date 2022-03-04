@@ -8,6 +8,8 @@ set -e
 PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.0.8/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
 CHECKSUM="7e60f3a6f4057ec40ba26c8670068a4d7f82847575511d0393287c1fc899522e"
+DEVELOPER_ID="Vanta Inc (632L25QNV4)"
+CERT_SHA_FINGERPRINT="D90D17FA20360BC635BC1A59B9FA5C6F9C9C2D4915711E4E0C182AA11E772BEF"
 PKG_PATH="$(mktemp -d)/vanta.pkg"
 
 ##
@@ -65,6 +67,29 @@ if [ $downloaded_checksum = $CHECKSUM ]; then
     printf "\033[34mChecksums match.\n\033[0m"
 else
     printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
+    exit 1
+fi
+
+##
+# Check Developer ID
+##
+printf "\033[34m\n* Ensuring package Developer ID matches\n\033[0m"
+
+if pkgutil --check-signature $PKG_PATH | /usr/bin/grep -q "$DEVELOPER_ID"; then
+    printf "\033[34mDeveloper ID matches.\n\033[0m"
+else
+    printf "\033[31m Developer ID does not match. Please contact support@vanta.com \033[0m\n"
+    exit 1
+fi
+
+##
+# Check Developer Certificate Fingerprint
+##
+printf "\033[34m\n* Ensuring package Developer Certificate Fingerprint matches\n\033[0m"
+if pkgutil --check-signature $PKG_PATH | /usr/bin/tr -d '\n' | /usr/bin/tr -d ' ' | /usr/bin/grep -q "SHA256Fingerprint:$CERT_SHA_FINGERPRINT"; then
+    printf "\033[34mDeveloper Certificate Fingerprint matches.\n\033[0m"
+else
+    printf "\033[31m Developer Certificate Fingerprint does not match. Please contact support@vanta.com \033[0m\n"
     exit 1
 fi
 
