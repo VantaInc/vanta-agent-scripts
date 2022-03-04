@@ -75,7 +75,7 @@ fi
 ##
 printf "\033[34m\n* Ensuring package Developer ID matches\n\033[0m"
 
-if pkgutil --check-signature $PKG_PATH | grep -q "$DEVELOPER_ID"; then
+if pkgutil --check-signature $PKG_PATH | /usr/bin/grep -q "$DEVELOPER_ID"; then
     printf "\033[34mDeveloper ID matches.\n\033[0m"
 else
     printf "\033[31m Developer ID does not match. Please contact support@vanta.com \033[0m\n"
@@ -86,7 +86,7 @@ fi
 # Check Developer Certificate Fingerprint
 ##
 printf "\033[34m\n* Ensuring package Developer Certificate Fingerprint matches\n\033[0m"
-if pkgutil --check-signature $PKG_PATH | tr -d '\n' | tr -d ' ' | grep -q "SHA256Fingerprint:$CERT_SHA_FINGERPRINT"; then
+if pkgutil --check-signature $PKG_PATH | /usr/bin/tr -d '\n' | /usr/bin/tr -d ' ' | /usr/bin/grep -q "SHA256Fingerprint:$CERT_SHA_FINGERPRINT"; then
     printf "\033[34mDeveloper Certificate Fingerprint matches.\n\033[0m"
 else
     printf "\033[31m Developer Certificate Fingerprint does not match. Please contact support@vanta.com \033[0m\n"
