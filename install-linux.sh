@@ -141,7 +141,7 @@ if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
 
     printf "\033[34m\n* Downloading the SELinux package\n\033[0m"
     rm -f $SELINUX_PATH
-    curl --progress-bar $SELINUX_URL > $SELINUX_PATH
+    curl --progress-bar --output $SELINUX_PATH $SELINUX_URL
 fi
 
 function onerror() {
@@ -158,7 +158,7 @@ trap onerror ERR
 ##
 printf "\033[34m\n* Downloading the Vanta Agent\n\033[0m"
 rm -f $PKG_PATH
-curl --progress-bar $PKG_URL > $PKG_PATH
+curl --progress-bar --output $PKG_PATH $PKG_URL
 
 ##
 # Checksum
