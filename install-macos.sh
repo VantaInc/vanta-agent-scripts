@@ -7,7 +7,7 @@ set -e
 
 PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.1.0/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
-CHECKSUM="7e60f3a6f4057ec40ba26c8670068a4d7f82847575511d0393287c1fc899522e"
+CHECKSUM="02acb7d72f6b569fb66ea56e7fb80aa8d16d07e1ddfdc16aeb9b8ff3087fbfc6"
 DEVELOPER_ID="Vanta Inc (632L25QNV4)"
 CERT_SHA_FINGERPRINT="D90D17FA20360BC635BC1A59B9FA5C6F9C9C2D4915711E4E0C182AA11E772BEF"
 PKG_PATH="$(mktemp -d)/vanta.pkg"
