@@ -5,7 +5,7 @@ set -e
 # VANTA_KEY (the Vanta per-domain secret key)
 # VANTA_OWNER_EMAIL (the email of the person who owns this computer. Ignored if VANTA_KEY is missing.)
 
-PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.2.2/vanta-universal.pkg"
+PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.2.3/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
 CHECKSUM="dd6c3c1b83521dff71ce278947922151739c2ecb90045530adccbbaf2d9849b7"
 DEVELOPER_ID="Vanta Inc (632L25QNV4)"
@@ -28,7 +28,6 @@ You must specify the VANTA_KEY environment variable in order to install the agen
     exit 1
 fi
 
-
 function onerror() {
     printf "\033[31m$ERROR_MESSAGE
 Something went wrong while installing the Vanta agent.
@@ -40,13 +39,12 @@ If you're having trouble installing, please send an email to support@vanta.com, 
 }
 trap onerror ERR
 
-
 ##
 # Download the agent
 ##
 printf "\033[34m\n* Downloading the Vanta Agent\n\033[0m"
 rm -f $PKG_PATH
-curl --progress-bar $PKG_URL > $PKG_PATH
+curl --progress-bar $PKG_URL >$PKG_PATH
 
 ##
 # Checksum
