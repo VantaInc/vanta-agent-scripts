@@ -15,7 +15,7 @@ PKG_PATH="$(mktemp -d)/vanta.pkg"
 ##
 # Vanta needs to be installed as root; use sudo if not already uid 0
 ##
-if [ $(echo "$UID") = "0" ]; then
+if [ "$(echo "$UID")" = "0" ]; then
     SUDO=''
 else
     SUDO='sudo -E'
@@ -43,15 +43,15 @@ trap onerror ERR
 # Download the agent
 ##
 printf "\033[34m\n* Downloading the Vanta Agent\n\033[0m"
-rm -f $PKG_PATH
-curl --progress-bar $PKG_URL >$PKG_PATH
+rm -f "$PKG_PATH"
+curl --progress-bar "$PKG_URL" >"$PKG_PATH"
 
 ##
 # Checksum
 ##
 printf "\033[34m\n* Ensuring checksums match\n\033[0m"
-downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
-if [ $downloaded_checksum = $CHECKSUM ]; then
+downloaded_checksum="$(shasum -a256 "$PKG_PATH" | cut -d" " -f1)"
+if [ "$downloaded_checksum" = "$CHECKSUM" ]; then
     printf "\033[34mChecksums match.\n\033[0m"
 else
     printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
@@ -63,7 +63,7 @@ fi
 ##
 printf "\033[34m\n* Ensuring package Developer ID matches\n\033[0m"
 
-if pkgutil --check-signature $PKG_PATH | /usr/bin/grep -q "$DEVELOPER_ID"; then
+if pkgutil --check-signature "$PKG_PATH" | /usr/bin/grep -q "$DEVELOPER_ID"; then
     printf "\033[34mDeveloper ID matches.\n\033[0m"
 else
     printf "\033[31m Developer ID does not match. Please contact support@vanta.com \033[0m\n"
@@ -74,7 +74,7 @@ fi
 # Check Developer Certificate Fingerprint
 ##
 printf "\033[34m\n* Ensuring package Developer Certificate Fingerprint matches\n\033[0m"
-if pkgutil --check-signature $PKG_PATH | /usr/bin/tr -d '\n' | /usr/bin/tr -d ' ' | /usr/bin/grep -q "SHA256Fingerprint:$CERT_SHA_FINGERPRINT"; then
+if pkgutil --check-signature "$PKG_PATH" | /usr/bin/tr -d '\n' | /usr/bin/tr -d ' ' | /usr/bin/grep -q "SHA256Fingerprint:$CERT_SHA_FINGERPRINT"; then
     printf "\033[34mDeveloper Certificate Fingerprint matches.\n\033[0m"
 else
     printf "\033[31m Developer Certificate Fingerprint does not match. Please contact support@vanta.com \033[0m\n"
@@ -87,17 +87,17 @@ fi
 printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
 $SUDO launchctl setenv VANTA_KEY "$VANTA_KEY"
 $SUDO launchctl setenv VANTA_OWNER_EMAIL "$VANTA_OWNER_EMAIL"
-$SUDO /usr/sbin/installer -pkg $PKG_PATH -target / >/dev/null
+$SUDO /usr/sbin/installer -pkg "$PKG_PATH" -target / >/dev/null
 $SUDO launchctl unsetenv VANTA_KEY
 $SUDO launchctl unsetenv VANTA_OWNER_EMAIL
-rm -f $PKG_PATH
+rm -f "$PKG_PATH"
 
 ##
 # check if the agent is running
 # return val 0 means running,
 # return val 2 means running but needs to register
 ##
-$SUDO /usr/local/vanta/vanta-cli status || [ $? == 2 ]
+$SUDO /usr/local/vanta/vanta-cli status || [ "$?" == 2 ]
 
 printf "\033[32m
 Your Agent is running properly. It will continue to run in the
