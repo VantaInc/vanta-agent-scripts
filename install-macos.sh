@@ -5,12 +5,13 @@ set -e
 # VANTA_KEY (the Vanta per-domain secret key)
 # VANTA_OWNER_EMAIL (the email of the person who owns this computer. Ignored if VANTA_KEY is missing.)
 
-PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.2.3/vanta-universal.pkg"
+PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.3.4/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
-CHECKSUM="e3db548e26c7e2eb84eeb2799623927c76bbf9dc44be74327637f1ca7920aaf0"
+CHECKSUM="ebd64bd170d7f3431b5b7e5144f1e8497be0e16b99e294ab49592c631064b2f1"
 DEVELOPER_ID="Vanta Inc (632L25QNV4)"
 CERT_SHA_FINGERPRINT="D90D17FA20360BC635BC1A59B9FA5C6F9C9C2D4915711E4E0C182AA11E772BEF"
 PKG_PATH="$(mktemp -d)/vanta.pkg"
+VANTA_CONF_PATH="/etc/vanta.conf"
 
 ##
 # Vanta needs to be installed as root; use sudo if not already uid 0
@@ -34,8 +35,6 @@ Something went wrong while installing the Vanta agent.
 
 If you're having trouble installing, please send an email to support@vanta.com, and we'll help you fix it!
 \n\033[0m\n"
-    $SUDO launchctl unsetenv VANTA_KEY
-    $SUDO launchctl unsetenv VANTA_OWNER_EMAIL
 }
 trap onerror ERR
 
@@ -55,6 +54,7 @@ if [ $downloaded_checksum = $CHECKSUM ]; then
     printf "\033[34mChecksums match.\n\033[0m"
 else
     printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
+    rm -f $PKG_PATH
     exit 1
 fi
 
@@ -67,6 +67,7 @@ if pkgutil --check-signature $PKG_PATH | /usr/bin/grep -q "$DEVELOPER_ID"; then
     printf "\033[34mDeveloper ID matches.\n\033[0m"
 else
     printf "\033[31m Developer ID does not match. Please contact support@vanta.com \033[0m\n"
+    rm -f $PKG_PATH
     exit 1
 fi
 
@@ -78,6 +79,7 @@ if pkgutil --check-signature $PKG_PATH | /usr/bin/tr -d '\n' | /usr/bin/tr -d ' 
     printf "\033[34mDeveloper Certificate Fingerprint matches.\n\033[0m"
 else
     printf "\033[31m Developer Certificate Fingerprint does not match. Please contact support@vanta.com \033[0m\n"
+    rm -f $PKG_PATH
     exit 1
 fi
 
@@ -85,11 +87,11 @@ fi
 # Install the agent
 ##
 printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
-$SUDO launchctl setenv VANTA_KEY "$VANTA_KEY"
-$SUDO launchctl setenv VANTA_OWNER_EMAIL "$VANTA_OWNER_EMAIL"
+CONFIG="{\"AGENT_KEY\":\"$VANTA_KEY\",\"OWNER_EMAIL\":\"$VANTA_OWNER_EMAIL\",\"NEEDS_OWNER\":true}"
+echo "$CONFIG" | $SUDO tee "$VANTA_CONF_PATH" > /dev/null
+$SUDO /bin/chmod 400 "$VANTA_CONF_PATH"
+$SUDO /usr/sbin/chown root:wheel "$VANTA_CONF_PATH"
 $SUDO /usr/sbin/installer -pkg $PKG_PATH -target / >/dev/null
-$SUDO launchctl unsetenv VANTA_KEY
-$SUDO launchctl unsetenv VANTA_OWNER_EMAIL
 rm -f $PKG_PATH
 
 ##
