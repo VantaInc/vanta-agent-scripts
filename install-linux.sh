@@ -3,44 +3,25 @@
 # Available environment variables:
 # VANTA_KEY (the Vanta per-domain secret key)
 # VANTA_NOSTART (if true, then don't start the service upon installation.)
-# VANTA_EXPERIMENTAL_SELINUX (if true, then also install the SELinux package). Currently Redhat/Centos only.
 
 set -e
 
-DEB_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.3.4/vanta-amd64.deb"
-RPM_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.3.4/vanta-amd64.rpm"
-# Checksums need to be updated when PKG_URL is updated.
-DEB_CHECKSUM="ec3bb77172359f0251a5b48e4469809759da711f5ccff265586dc51db85df70a"
-RPM_CHECKSUM="039f590518ad87c5b80d672cf83db4458f6cd4651130e6bc5a132bf054e67b7f"
+DEB_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.3.5/vanta-amd64.deb"
+# Checksums need to be updated when DEB_URL is updated.
+DEB_CHECKSUM="53aeb60db8c33e485ef8f837f4ce52ade3dbf06a578f93e1d9d67c4c15725474"
 DEB_PATH="$(mktemp -d)/vanta.deb"
-RPM_PATH="$(mktemp -d)/vanta.rpm"
 DEB_INSTALL_CMD="dpkg -Ei"
-RPM_INSTALL_CMD="rpm -i"
-
-SELINUX_PATH="$(mktemp -d)/vanta_selinux.rpm"
-SELINUX_URL="https://vanta-agent.s3.amazonaws.com/vanta_agent_selinux-1.2-1.el8.noarch.rpm"
 
 UUID_PATH="/sys/class/dmi/id/product_uuid"
 
 # OS/Distro Detection
 # Try lsb_release, fallback with /etc/issue then uname command
 # Detection code taken from https://github.com/DataDog/datadog-agent/blob/master/cmd/agent/install_script.sh
-KNOWN_DISTRIBUTION="(Debian|Ubuntu|RedHat|CentOS|openSUSE|Amazon|Arista|SUSE)"
+KNOWN_DISTRIBUTION="(Debian|Ubuntu)"
 DISTRIBUTION=$(lsb_release -d 2>/dev/null | grep -Eo $KNOWN_DISTRIBUTION  || grep -Eo $KNOWN_DISTRIBUTION /etc/issue 2>/dev/null || grep -Eo $KNOWN_DISTRIBUTION /etc/Eos-release 2>/dev/null || grep -m1 -Eo $KNOWN_DISTRIBUTION /etc/os-release 2>/dev/null || uname -s)
 
 if [ -f /etc/debian_version -o "$DISTRIBUTION" == "Debian" -o "$DISTRIBUTION" == "Ubuntu" ]; then
     OS="Debian"
-elif [ -f /etc/redhat-release -o "$DISTRIBUTION" == "RedHat" -o "$DISTRIBUTION" == "CentOS" -o "$DISTRIBUTION" == "Amazon" ]; then
-    OS="RedHat"
-# Some newer distros like Amazon may not have a redhat-release file
-elif [ -f /etc/system-release -o "$DISTRIBUTION" == "Amazon" ]; then
-    OS="RedHat"
-# Arista is based off of Fedora14/18 but do not have /etc/redhat-release
-elif [ -f /etc/Eos-release -o "$DISTRIBUTION" == "Arista" ]; then
-    OS="RedHat"
-# openSUSE and SUSE use /etc/SuSE-release or /etc/os-release
-elif [ -f /etc/SuSE-release -o "$DISTRIBUTION" == "SUSE" -o "$DISTRIBUTION" == "openSUSE" ]; then
-    OS="SUSE"
 fi
 
 ##
@@ -66,12 +47,6 @@ if [ "${OS}" == "Debian" ]; then
     PKG_PATH=$DEB_PATH
     INSTALL_CMD=$DEB_INSTALL_CMD
     CHECKSUM=$DEB_CHECKSUM
-elif [ "${OS}" == "RedHat" ]; then
-    printf "\033[34m\n* RedHat detected \n\033[0m"
-    PKG_URL=$RPM_URL
-    PKG_PATH=$RPM_PATH
-    INSTALL_CMD=$RPM_INSTALL_CMD
-    CHECKSUM=$RPM_CHECKSUM
 else
     printf "\033[31m
 Cannot install the Vanta agent on unsupported platform $(get_platform).
@@ -124,26 +99,6 @@ You must specify the VANTA_KEY environment variable in order to install the agen
     exit 1
 fi
 
-if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
-    if  [ -z "$VANTA_NOSTART" ]; then
-        printf "\033[31m
-    You must specify the VANTA_NOSTART environment variable when using VANTA_EXPERIMENTAL_SELINUX.
-    \n\033[0m\n"
-        exit 1
-    fi
-
-    if [ "${OS}" != "RedHat" ]; then
-        printf "\033[31m
-    SELinux support is not available on your OS.
-    \n\033[0m\n"
-        exit 1
-    fi
-
-    printf "\033[34m\n* Downloading the SELinux package\n\033[0m"
-    rm -f $SELINUX_PATH
-    curl --progress-bar --output $SELINUX_PATH $SELINUX_URL
-fi
-
 function onerror() {
     printf "\033[31m$ERROR_MESSAGE
 Something went wrong while installing the Vanta agent.
@@ -188,14 +143,6 @@ fi
 ##
 printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
 $SUDO $INSTALL_CMD $PKG_PATH
-
-##
-# Install the SELinux package
-##
-if [ ! -z "$VANTA_EXPERIMENTAL_SELINUX" ]; then
-    printf "\033[34m\n* Installing SELinux support\n\033[0m"
-    $SUDO $INSTALL_CMD $SELINUX_PATH
-fi
 
 
 ##
