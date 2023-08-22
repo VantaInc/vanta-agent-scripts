@@ -90,7 +90,7 @@ fi
 printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
 CONFIG="{\"AGENT_KEY\":\"$VANTA_KEY\",\"OWNER_EMAIL\":\"$VANTA_OWNER_EMAIL\",\"NEEDS_OWNER\":true,\"REGION\":\"$VANTA_REGION\"}"
 echo "$CONFIG" | $SUDO tee "$VANTA_CONF_PATH" > /dev/null
-$SUDO /bin/chmod 400 "$VANTA_CONF_PATH"
+$SUDO /bin/chmod 600 "$VANTA_CONF_PATH"
 $SUDO /usr/sbin/chown root:wheel "$VANTA_CONF_PATH"
 $SUDO /usr/sbin/installer -pkg $PKG_PATH -target / >/dev/null
 rm -f $PKG_PATH
