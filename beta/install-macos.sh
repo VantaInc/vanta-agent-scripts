@@ -6,9 +6,9 @@ set -e
 # VANTA_OWNER_EMAIL (the email of the person who owns this computer. Ignored if VANTA_KEY is missing.)
 # VANTA_REGION (the region the Agent talks to, such as "us" or "eu".)
 
-PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.5.0/vanta-universal.pkg"
+PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.5.1/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
-CHECKSUM="b4d2bc2c0399a20917c183aab780f9e04dace47ac81b8fbe3c2b3dade733dabc"
+CHECKSUM="4f7736bb5af2caa18dab9af2398f4fcfb6329071e0c1a751191bd07163385ea7"
 DEVELOPER_ID="Vanta Inc (632L25QNV4)"
 CERT_SHA_FINGERPRINT="D90D17FA20360BC635BC1A59B9FA5C6F9C9C2D4915711E4E0C182AA11E772BEF"
 PKG_PATH="$(mktemp -d)/vanta.pkg"
