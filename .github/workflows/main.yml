@@ -25,9 +25,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - name: Test install on macOS
-        run: |
-          chmod +x ./install-macos.sh
-          VANTA_KEY=FAKEKEY ./install-macos.sh
-      - name: Check that it's running correctly
-        run: /usr/local/vanta/vanta-cli status
+      # NB: Disabled until release 2.8 fixes FAKEKEY installation [sc-127560]
+      # - name: Test install on macOS
+      #   run: |
+      #     chmod +x ./install-macos.sh
+      #     VANTA_KEY=FAKEKEY ./install-macos.sh
+      # - name: Check that it's running correctly
+      #   run: /usr/local/vanta/vanta-cli status

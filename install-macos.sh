@@ -4,10 +4,11 @@ set -e
 # Environment variables:
 # VANTA_KEY (the Vanta per-domain secret key)
 # VANTA_OWNER_EMAIL (the email of the person who owns this computer. Ignored if VANTA_KEY is missing.)
+# VANTA_REGION (the region the Agent talks to, such as "us" or "eu".)
 
-PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.4.0/vanta-universal.pkg"
+PKG_URL="https://vanta-agent-repo.s3.amazonaws.com/targets/versions/2.7.1/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
-CHECKSUM="9f6f518706e5c08856cf15c3429b96a28d545aa589fc67e60095e744b4891d63"
+CHECKSUM="9e7c3a9191636790130fe1c49ce17b3f2f7fbaa0cfe7eca1d5b56c688727623c"
 DEVELOPER_ID="Vanta Inc (632L25QNV4)"
 CERT_SHA_FINGERPRINT="D90D17FA20360BC635BC1A59B9FA5C6F9C9C2D4915711E4E0C182AA11E772BEF"
 PKG_PATH="$(mktemp -d)/vanta.pkg"
@@ -87,9 +88,10 @@ fi
 # Install the agent
 ##
 printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
-CONFIG="{\"AGENT_KEY\":\"$VANTA_KEY\",\"OWNER_EMAIL\":\"$VANTA_OWNER_EMAIL\",\"NEEDS_OWNER\":true}"
+ACTIVATION_REQUESTED_NONCE=$(date +%s000)
+CONFIG="{\"ACTIVATION_REQUESTED_NONCE\":$ACTIVATION_REQUESTED_NONCE,\"AGENT_KEY\":\"$VANTA_KEY\",\"OWNER_EMAIL\":\"$VANTA_OWNER_EMAIL\",\"NEEDS_OWNER\":true,\"REGION\":\"$VANTA_REGION\"}"
 echo "$CONFIG" | $SUDO tee "$VANTA_CONF_PATH" > /dev/null
-$SUDO /bin/chmod 400 "$VANTA_CONF_PATH"
+$SUDO /bin/chmod 600 "$VANTA_CONF_PATH"
 $SUDO /usr/sbin/chown root:wheel "$VANTA_CONF_PATH"
 $SUDO /usr/sbin/installer -pkg $PKG_PATH -target / >/dev/null
 rm -f $PKG_PATH
