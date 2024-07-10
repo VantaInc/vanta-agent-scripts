@@ -22,7 +22,7 @@ jobs:
 
   build-macos:
     runs-on: macos-13
-
+    
     steps:
       - uses: actions/checkout@v1
       - name: Test install on macOS
