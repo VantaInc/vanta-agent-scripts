@@ -93,8 +93,9 @@ CONFIG="{\"ACTIVATION_REQUESTED_NONCE\":$ACTIVATION_REQUESTED_NONCE,\"AGENT_KEY\
 echo "$CONFIG" | $SUDO tee "$VANTA_CONF_PATH" > /dev/null
 $SUDO /bin/chmod 600 "$VANTA_CONF_PATH"
 $SUDO /usr/sbin/chown root:wheel "$VANTA_CONF_PATH"
-$SUDO /usr/sbin/installer -pkg $PKG_PATH -target /
+$SUDO /usr/sbin/installer -pkg $PKG_PATH -target / || true
 # temporary log installation logs
+echo "prining installation logs"
 tail -n 50 /var/log/install.log
 
 # $SUDO /usr/sbin/installer -pkg $PKG_PATH -target / >/dev/null
