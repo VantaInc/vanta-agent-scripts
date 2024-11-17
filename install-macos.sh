@@ -3,12 +3,12 @@ set -e
 
 # Environment variables:
 # VANTA_KEY (the Vanta per-domain secret key)
-# VANTA_OWNER_EMAIL (the email of the person who owns this computer. Ignored if VANTA_KEY is missing.)
-# VANTA_REGION (the region the Agent talks to, such as "us" or "eu".)
+# VANTA_OWNER_EMAIL (the email of the person who owns this computer)
+# VANTA_REGION (the region the Agent talks to, such as "us", "eu" or "aus".)
 
-PKG_URL="https://agent-downloads.vanta.com/targets/versions/2.10.0/vanta-universal.pkg"
+PKG_URL="https://agent-downloads.vanta.com/targets/versions/2.11.0/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
-CHECKSUM="15abe12e1dd8a220c768e7b3157fe0427e189bf2f8fdde1bd3ffec513ebc45b4"
+CHECKSUM="3ecd027dcc6079af06c3372fd0bee1d36f5304c5465d64c97779c6c05478323b"
 DEVELOPER_ID="Vanta Inc (632L25QNV4)"
 CERT_SHA_FINGERPRINT="D90D17FA20360BC635BC1A59B9FA5C6F9C9C2D4915711E4E0C182AA11E772BEF"
 PKG_PATH="$(mktemp -d)/vanta.pkg"
@@ -29,6 +29,21 @@ You must specify the VANTA_KEY environment variable in order to install the agen
 \n\033[0m\n"
     exit 1
 fi
+
+if [ -z "$VANTA_OWNER_EMAIL" ]; then
+    printf "\033[31m
+You must specify the VANTA_OWNER_EMAIL environment variable in order to install the agent.
+\n\033[0m\n"
+    exit 1
+fi
+
+if [ -z "$VANTA_REGION" ]; then
+    printf "\033[31m
+You must specify the VANTA_REGION environment variable in order to install the agent.
+\n\033[0m\n"
+    exit 1
+fi
+
 
 function onerror() {
     printf "\033[31m$ERROR_MESSAGE
