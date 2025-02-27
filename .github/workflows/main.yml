@@ -16,7 +16,7 @@ jobs:
       - name: Test install on Ubuntu
         run: |
           chmod +x ./install-linux.sh
-          VANTA_SKIP_REGISTRATION_CHECK=1 VANTA_KEY=FAKEKEY ./install-linux.sh
+          VANTA_SKIP_REGISTRATION_CHECK=1 VANTA_KEY=FAKEKEY VANTA_OWNER_EMAIL=fake-email@vanta.com VANTA_REGION=us ./install-linux.sh
       - name: Check that it's running correctly
         run: /var/vanta/vanta-cli status
 

@@ -2,13 +2,15 @@
 
 # Available environment variables:
 # VANTA_KEY (the Vanta per-domain secret key)
+# VANTA_OWNER_EMAIL (the email of the person who owns this computer)
+# VANTA_REGION (the region the Agent talks to, such as "us", "eu" or "aus".)
 # VANTA_NOSTART (if true, then don't start the service upon installation.)
 
 set -e
 
-DEB_URL="https://agent-downloads.vanta.com/targets/versions/2.12.0/vanta-amd64.deb"
+DEB_URL="https://agent-downloads.vanta.com/targets/versions/2.13.0/vanta-amd64.deb"
 # Checksums need to be updated when DEB_URL is updated.
-DEB_CHECKSUM="17312a1c1195bed192216c6240a322581bb569c0bd3a88de42b587203362d403"
+DEB_CHECKSUM="aced177e5d4c0d47490722ddde41aa00fe6ee8e8316da3b9309a29ae05b57ad7"
 DEB_PATH="$(mktemp -d)/vanta.deb"
 DEB_INSTALL_CMD="dpkg -Ei"
 
@@ -95,6 +97,18 @@ printf "\033[34m\nUUID check passed.\n\033[0m"
 if [ -z "$VANTA_KEY" ]; then
     printf "\033[31m
 You must specify the VANTA_KEY environment variable in order to install the agent.
+\n\033[0m\n"
+    exit 1
+fi
+if [ -z "$VANTA_OWNER_EMAIL" ]; then
+    printf "\033[31m
+You must specify the VANTA_OWNER_EMAIL environment variable in order to install the agent.
+\n\033[0m\n"
+    exit 1
+fi
+if [ -z "$VANTA_REGION" ]; then
+    printf "\033[31m
+You must specify the VANTA_REGION environment variable in order to install the agent.
 \n\033[0m\n"
     exit 1
 fi
