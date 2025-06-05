@@ -3,14 +3,14 @@
 # Available environment variables:
 # VANTA_KEY (the Vanta per-domain secret key)
 # VANTA_OWNER_EMAIL (the email of the person who owns this computer)
-# VANTA_REGION (the region the Agent talks to, such as "us", "eu" or "aus".)
+# VANTA_REGION (the region Vanta Device Monitor talks to, such as "us", "eu" or "aus".)
 # VANTA_NOSTART (if true, then don't start the service upon installation.)
 
 set -e
 
-DEB_URL="https://agent-downloads.vanta.com/targets/versions/2.13.0/vanta-amd64.deb"
+DEB_URL="https://agent-downloads.vanta.com/targets/versions/2.14.0/vanta-amd64.deb"
 # Checksums need to be updated when DEB_URL is updated.
-DEB_CHECKSUM="aced177e5d4c0d47490722ddde41aa00fe6ee8e8316da3b9309a29ae05b57ad7"
+DEB_CHECKSUM="21845a5e9477cfb61f779a9c1d9af2c9ad94cd7f6b95d8dd076effb935ee7d49"
 DEB_PATH="$(mktemp -d)/vanta.deb"
 DEB_INSTALL_CMD="dpkg -Ei"
 
@@ -51,7 +51,7 @@ if [ "${OS}" == "Debian" ]; then
     CHECKSUM=$DEB_CHECKSUM
 else
     printf "\033[31m
-Cannot install the Vanta agent on unsupported platform $(get_platform).
+Cannot install Vanta Device Monitor on unsupported platform $(get_platform).
 Please reach out to support@vanta.com for help.
 \n\033[0m\n"
     exit 1
@@ -59,7 +59,7 @@ fi
 
 if [ ! -f "$UUID_PATH" ]; then
     printf "\033[31m
-Unable to detect hardware UUID – the Vanta Agent is only supported on platforms which provide a value in $UUID_PATH
+Unable to detect hardware UUID – Vanta Device Monitor is only supported on platforms which provide a value in $UUID_PATH
 \n\033[0m\n"
     exit 1
 fi
@@ -85,7 +85,7 @@ bad_uuids=(
 for uuid in ${bad_uuids[*]}; do
     if [ "$uuid" = "$hardware_uuid" ]; then
         printf "\033[31m
-Invalid hardware UUID – the Vanta Agent is only supported on platforms which provide a unique value in $UUID_PATH
+Invalid hardware UUID – Vanta Device Monitor is only supported on platforms which provide a unique value in $UUID_PATH
 \n\033[0m\n"
         exit 1
     fi
@@ -96,26 +96,26 @@ printf "\033[34m\nUUID check passed.\n\033[0m"
 
 if [ -z "$VANTA_KEY" ]; then
     printf "\033[31m
-You must specify the VANTA_KEY environment variable in order to install the agent.
+You must specify the VANTA_KEY environment variable in order to install Vanta Device Monitor.
 \n\033[0m\n"
     exit 1
 fi
 if [ -z "$VANTA_OWNER_EMAIL" ]; then
     printf "\033[31m
-You must specify the VANTA_OWNER_EMAIL environment variable in order to install the agent.
+You must specify the VANTA_OWNER_EMAIL environment variable in order to install Vanta Device Monitor.
 \n\033[0m\n"
     exit 1
 fi
 if [ -z "$VANTA_REGION" ]; then
     printf "\033[31m
-You must specify the VANTA_REGION environment variable in order to install the agent.
+You must specify the VANTA_REGION environment variable in order to install Vanta Device Monitor.
 \n\033[0m\n"
     exit 1
 fi
 
 function onerror() {
     printf "\033[31m$ERROR_MESSAGE
-Something went wrong while installing the Vanta agent.
+Something went wrong while installing Vanta Device Monitor.
 
 If you're having trouble installing, please send an email to support@vanta.com, and we'll help you fix it!
 \n\033[0m\n"
@@ -123,9 +123,9 @@ If you're having trouble installing, please send an email to support@vanta.com, 
 trap onerror ERR
 
 ##
-# Download the agent
+# Download Vanta Device Monitor
 ##
-printf "\033[34m\n* Downloading the Vanta Agent\n\033[0m"
+printf "\033[34m\n* Downloading Vanta Device Monitor\n\033[0m"
 rm -f $PKG_PATH
 curl --progress-bar --output $PKG_PATH $PKG_URL
 
@@ -153,14 +153,14 @@ else
 fi
 
 ##
-# Install the agent
+# Install Vanta Device Monitor
 ##
-printf "\033[34m\n* Installing the Vanta Agent. You might be asked for your password...\n\033[0m"
+printf "\033[34m\n* Installing Vanta Device Monitor. You might be asked for your password...\n\033[0m"
 $SUDO $INSTALL_CMD $PKG_PATH
 
 
 ##
-# Check whether the agent is registered. It may take a couple of seconds,
+# Check whether Vanta Device Monitor is registered. It may take a couple of seconds,
 # so try 5 times with 5-second pauses in between.
 ##
 if [ -z "$VANTA_SKIP_REGISTRATION_CHECK" ] && [ -z "$VANTA_NOSTART" ]; then
@@ -179,7 +179,7 @@ if [ -z "$VANTA_SKIP_REGISTRATION_CHECK" ] && [ -z "$VANTA_NOSTART" ]; then
 
     if [ "$registration_success" = false ] ; then
         printf "\033[31m
-    Could not verify that the agent is registered to a Vanta domain. Are you sure you used the right key?
+    Could not verify that Vanta Device Monitor is registered to a Vanta domain. Are you sure you used the right key?
     \n\033[0m\n" >&2
         exit 0
     fi
@@ -189,8 +189,8 @@ else
 fi
 
 printf "\033[32m
-The Vanta agent has been installed successfully.
+Vanta Device Monitor has been installed successfully.
 It will run in the background and submit data to Vanta.
 
-You can check the agent status using the \"/var/vanta/vanta-cli status\" command.
+You can check the status of Vanta Device Monitor using the \"/var/vanta/vanta-cli status\" command.
 \033[0m"
