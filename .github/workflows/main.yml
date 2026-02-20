@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v6
       - name: Test install on Ubuntu
         run: |
           chmod +x ./install-linux.sh
@@ -24,7 +24,7 @@ jobs:
     runs-on: macos-latest
     
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v6
       - name: Test install on macOS
         run: |
           chmod +x ./install-macos.sh
