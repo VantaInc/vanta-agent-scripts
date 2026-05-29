@@ -8,7 +8,7 @@ set -e
 
 PKG_URL="https://agent-downloads.vanta.com/targets/versions/2.17.2/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
-CHECKSUM="66c71af348441c7efdb88d98fd43e8f9d401bd21976bcb0ff7b1a4fb56a9628c"
+CHECKSUM="d939f0d7d9bd1a51452e27fa4982668386aa5306198731c8214b34a30e9ac52f"
 DEVELOPER_ID="Vanta Inc (632L25QNV4)"
 CERT_SHA_FINGERPRINT="48893790A4B4FB1684589E3AC91CC25EDD5284F9E7BA07025CBDF2814FE74984"
 PKG_PATH="$(mktemp -d)/vanta.pkg"
