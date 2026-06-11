@@ -32,7 +32,7 @@ fi
 if [ $(echo "$UID") = "0" ]; then
     SUDO=''
 else
-    SUDO='sudo -E'
+    SUDO='sudo'
 fi
 
 function get_platform() {
@@ -156,7 +156,12 @@ fi
 # Install Vanta Device Monitor
 ##
 printf "\033[34m\n* Installing Vanta Device Monitor. You might be asked for your password...\n\033[0m"
-$SUDO $INSTALL_CMD $PKG_PATH
+$SUDO env \
+    VANTA_KEY="$VANTA_KEY" \
+    VANTA_OWNER_EMAIL="$VANTA_OWNER_EMAIL" \
+    VANTA_REGION="$VANTA_REGION" \
+    ${VANTA_NOSTART:+VANTA_NOSTART="$VANTA_NOSTART"} \
+    $INSTALL_CMD $PKG_PATH
 
 
 ##
