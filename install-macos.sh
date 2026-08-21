@@ -6,9 +6,9 @@ set -e
 # VANTA_OWNER_EMAIL (the email of the person who owns this computer)
 # VANTA_REGION (the region Vanta Device Monitor talks to, such as "us", "eu" or "aus".)
 
-PKG_URL="https://agent-downloads.vanta.com/targets/versions/2.17.2/vanta-universal.pkg"
+PKG_URL="https://agent-downloads.vanta.com/targets/versions/2.18.0/vanta-universal.pkg"
 # Checksum needs to be updated when PKG_URL is updated.
-CHECKSUM="d939f0d7d9bd1a51452e27fa4982668386aa5306198731c8214b34a30e9ac52f"
+CHECKSUM="cfc39535abaa8dac6bda27d77caa71dcf87b297c47fdcd54234a8eb2d084c13f"
 DEVELOPER_ID="Vanta Inc (632L25QNV4)"
 CERT_SHA_FINGERPRINT="48893790A4B4FB1684589E3AC91CC25EDD5284F9E7BA07025CBDF2814FE74984"
 PKG_PATH="$(mktemp -d)/vanta.pkg"
