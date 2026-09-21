@@ -58,19 +58,19 @@ trap onerror ERR
 # Download Vanta Device Monitor
 ##
 printf "\033[34m\n* Downloading Vanta Device Monitor\n\033[0m"
-rm -f $PKG_PATH
-curl --progress-bar $PKG_URL >$PKG_PATH
+rm -f "$PKG_PATH"
+curl --progress-bar "$PKG_URL" >"$PKG_PATH"
 
 ##
 # Checksum
 ##
 printf "\033[34m\n* Ensuring checksums match\n\033[0m"
-downloaded_checksum=$(shasum -a256 $PKG_PATH | cut -d" " -f1)
-if [ $downloaded_checksum = $CHECKSUM ]; then
+downloaded_checksum=$(shasum -a256 "$PKG_PATH" | cut -d" " -f1)
+if [ "$downloaded_checksum" = "$CHECKSUM" ]; then
     printf "\033[34mChecksums match.\n\033[0m"
 else
     printf "\033[31m Checksums do not match. Please contact support@vanta.com \033[0m\n"
-    rm -f $PKG_PATH
+    rm -f "$PKG_PATH"
     exit 1
 fi
 
@@ -79,11 +79,11 @@ fi
 ##
 printf "\033[34m\n* Ensuring package Developer ID matches\n\033[0m"
 
-if pkgutil --check-signature $PKG_PATH | /usr/bin/grep -q "$DEVELOPER_ID"; then
+if pkgutil --check-signature "$PKG_PATH" | /usr/bin/grep -q "$DEVELOPER_ID"; then
     printf "\033[34mDeveloper ID matches.\n\033[0m"
 else
     printf "\033[31m Developer ID does not match. Please contact support@vanta.com \033[0m\n"
-    rm -f $PKG_PATH
+    rm -f "$PKG_PATH"
     exit 1
 fi
 
@@ -91,11 +91,11 @@ fi
 # Check Developer Certificate Fingerprint
 ##
 printf "\033[34m\n* Ensuring package Developer Certificate Fingerprint matches\n\033[0m"
-if pkgutil --check-signature $PKG_PATH | /usr/bin/tr -d '\n' | /usr/bin/tr -d ' ' | /usr/bin/grep -q "SHA256Fingerprint:$CERT_SHA_FINGERPRINT"; then
+if pkgutil --check-signature "$PKG_PATH" | /usr/bin/tr -d '\n' | /usr/bin/tr -d ' ' | /usr/bin/grep -q "SHA256Fingerprint:$CERT_SHA_FINGERPRINT"; then
     printf "\033[34mDeveloper Certificate Fingerprint matches.\n\033[0m"
 else
     printf "\033[31m Developer Certificate Fingerprint does not match. Please contact support@vanta.com \033[0m\n"
-    rm -f $PKG_PATH
+    rm -f "$PKG_PATH"
     exit 1
 fi
 
@@ -108,8 +108,8 @@ CONFIG="{\"ACTIVATION_REQUESTED_NONCE\":$ACTIVATION_REQUESTED_NONCE,\"AGENT_KEY\
 echo "$CONFIG" | $SUDO tee "$VANTA_CONF_PATH" > /dev/null
 $SUDO /bin/chmod 600 "$VANTA_CONF_PATH"
 $SUDO /usr/sbin/chown root:wheel "$VANTA_CONF_PATH"
-$SUDO /usr/sbin/installer -pkg $PKG_PATH -target / >/dev/null
-rm -f $PKG_PATH
+$SUDO /usr/sbin/installer -pkg "$PKG_PATH" -target / >/dev/null
+rm -f "$PKG_PATH"
 
 ##
 # check if Vanta Device Monitor is running
