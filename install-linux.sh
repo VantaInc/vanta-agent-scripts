@@ -8,9 +8,9 @@
 
 set -e
 
-DEB_URL="https://agent-downloads.vanta.com/targets/versions/2.20.0/vanta-amd64.deb"
+DEB_URL="https://agent-downloads.vanta.com/targets/versions/2.21.0/vanta-amd64.deb"
 # Checksums need to be updated when DEB_URL is updated.
-DEB_CHECKSUM="42e67e2b8757239619f2a2aa8093dc32b91b88aa45c2d1538636097fc4b63da6"
+DEB_CHECKSUM="ffd83ef40351e701346e440e20be74f6850a2a6d4b7ed13c3a7069a46c8041d1"
 DEB_PATH="$(mktemp -d)/vanta.deb"
 DEB_INSTALL_CMD="dpkg -Ei"
 
